@@ -1,0 +1,1 @@
+// Placeholder for detecting login forms or future expansion
