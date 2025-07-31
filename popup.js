@@ -7,9 +7,26 @@ document.getElementById("save").addEventListener("click", () => {
   localStorage.setItem("jongo-pass", pass);
   localStorage.setItem("verify-code", code);
 
-  // Simulate sending email
-  fetch("email-mock.js?code=" + code + "&email=" + email);
-  document.getElementById("status").innerText = `Code sent to ${email}`;
+  // Send verification code to backend server
+  fetch("http://localhost:3000/send-code", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ email, code })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById("status").innerText = `Code sent to ${email}`;
+    } else {
+      document.getElementById("status").innerText = "❌ Failed to send code.";
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    document.getElementById("status").innerText = "❌ Error contacting server.";
+  });
 });
 
 document.getElementById("verify").addEventListener("click", () => {
